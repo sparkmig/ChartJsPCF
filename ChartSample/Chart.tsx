@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Label } from '@fluentui/react-components';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData, ChartType, registerables } from "chart.js";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Bar, Bubble, Doughnut, Line, Pie, PolarArea, Radar, Scatter } from "react-chartjs-2";
 import { useTransformer } from './transformer/useTransformers';
 import { TransformerError } from './transformer/errors';
 
@@ -42,6 +42,18 @@ function ChartSwitch<TType extends ChartType>({ chartType, data }: IChartSwitchP
       return <Doughnut data={data as ChartData<"doughnut", number[], string>} />
     case "bar":
       return <Bar data={data as ChartData<"bar", number[], string>} />
+    case "pie":
+      return <Pie data={data as ChartData<"pie", number[], string>} />
+    case "bubble":
+      return <Bubble data={data as ChartData<"bubble", number[], string>} />
+    case "radar":
+      return <Radar data={data as ChartData<"radar", number[], string>} />
+    case "line":
+      return <Line data={data as ChartData<"line", number[], string>} />
+    case "polarArea":
+      return <PolarArea data={data as ChartData<"polarArea", number[], string>} />
+    case "scatter":
+      return <Scatter data={data as ChartData<"scatter", number[], string>} />
     default:
       return <Label>Chart type {chartType} not supported.</Label>
   }

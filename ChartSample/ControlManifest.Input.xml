@@ -27,6 +27,10 @@
   default-value="bar"
 >
   <value name="Bar" display-name-key="Bar chart">bar</value>
+  <value name="Pie" display-name-key="Pie chart">pie</value>
+  <value name="Radar" display-name-key="Radar chart">radar</value>
+  <value name="Line" display-name-key="Line chart">line</value>
+  <value name="PolarArea" display-name-key="Polar Area chart">polarArea</value>
   <value name="Doughnut" display-name-key="Doughnut chart">doughnut</value>
 </property>
     <!-- dataset node represents a set of entity records on CDS; allow more than one datasets -->
