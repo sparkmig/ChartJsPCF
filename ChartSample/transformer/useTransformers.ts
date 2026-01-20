@@ -4,17 +4,15 @@ import DataSet = ComponentFramework.PropertyTypes.DataSet;
 import { ChartData, ChartType } from "chart.js";
 import { transformers } from "./transformers";
 
-export const useTransformer = <TType extends ChartType>(chartType: TType, dataset: DataSet, groupBy: string): ChartData<TType, number[], string> => {
+export const useTransformer = <TType extends ChartType>(chartType: TType, dataset: DataSet, groupBy: string): ChartData<TType, number[], string> | null => {
     return useMemo(() => {
+        if(!(chartType in transformers)) {
+            return null;
+        }
         const mapped = mapRecords(dataset, groupBy);
         const grouped = groupRecords(mapped, groupBy);
-
-        if (chartType in transformers) {
-            return transformers[chartType](grouped) as ChartData<TType, number[], string>;
-        }
         
-        throw new Error(`Transformer for chart type ${chartType} not found.`);
-
+        return transformers[chartType](grouped) as ChartData<TType, number[], string>;
     }, [dataset, groupBy, chartType]);
 }
 

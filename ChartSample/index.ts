@@ -1,8 +1,9 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import { Chart, IChartProps } from "./HelloWorld";
 import * as React from "react";
-import { Chart as ChartJS, ChartData } from "chart.js";
+import { Chart as ChartJS, ChartData, ChartType, CategoryScale, LinearScale } from "chart.js";
 import DataSetInterfaces = ComponentFramework.PropertyHelper.DataSetApi;
+import Chartjs2 from 'chart.js/auto';
 
 export class ChartSample implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private notifyOutputChanged: () => void;
@@ -37,45 +38,9 @@ export class ChartSample implements ComponentFramework.ReactControl<IInputs, IOu
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         const dataset = context.parameters.sampleDataSet;
         const groupBy = context.parameters.groupBy.raw ?? "Name";
-
-        const mapped = Object.keys(dataset.records).map((key: string) => {
-            const record = dataset.records[key];
-            const ent = {} as Record<string, unknown>;
-            dataset.columns.forEach((column: DataSetInterfaces.Column) => {
-                if(column.name === groupBy) {
-                    const value = record.getFormattedValue(column.name);
-                    ent[column.name] = value;
-                }
-            });
-            return ent;
-        });
-
-        const grouped = mapped.reduce((acc, curr) => {
-            acc = acc as Record<string, unknown[]>;
-            curr = curr as Record<string, string>;
-            
-            if (groupBy in curr) {
-                const groupByValue = curr[groupBy] as string;
-                if (!(groupByValue in acc)) {
-                    acc[groupByValue] = [curr];
-                }
-                else if (groupByValue in acc && Array.isArray(acc[groupByValue])) {
-                    acc[groupByValue].push(curr);
-                }
-            }
-            return acc;
-        }, {} ) as Record<string, unknown[]>;
-
-        const data: ChartData<"doughnut", number[], string> = {
-            labels: Object.keys(grouped),
-            datasets: [{
-                data: Object.keys(grouped).map(key => grouped[key].length),
-                backgroundColor: Object.keys(grouped).map(key => this.stringToColor(key)),
-            }],
-        };
-
-        const {allocatedHeight, allocatedWidth} = context.mode;
-        const props: IChartProps = { name: 'Power Apps', allocatedHeight, allocatedWidth, dataset };
+        const chartType = (context.parameters.chartType.raw ?? "doughnut") as ChartType;
+        const { allocatedHeight, allocatedWidth } = context.mode;
+        const props: IChartProps = { name: 'Power Apps', allocatedHeight, allocatedWidth, dataset, chartType, groupBy };
         return React.createElement(
             Chart, props
         );

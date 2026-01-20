@@ -13,7 +13,22 @@ const doughnut = (grouped: Record<string, number>) => {
     return data;
 }
 
+const bar = (grouped: Record<string, number>) => {
+    const data: ChartData<"bar", number[], string> = {
+        labels: Object.keys(grouped),
+        datasets: [{
+            label: 'Count',
+            data: Object.values(grouped),
+            backgroundColor: Object.keys(grouped).map(key => stringToColor(key)),
+            
+        }],
+    };  
+    console.log("Bar chart data:", data);
+    return data;
+}
+
 export const transformers = {
     doughnut,
+    bar
 } as Record<ChartType, (grouped: Record<string, number>) => ChartData<ChartType, number[], string>>;
 
