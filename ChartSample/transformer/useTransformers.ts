@@ -12,6 +12,7 @@ export const useTransformer = <TType extends ChartType>(chartType: TType, datase
         if (chartType in transformers) {
             return transformers[chartType](grouped) as ChartData<TType, number[], string>;
         }
+        
         throw new Error(`Transformer for chart type ${chartType} not found.`);
 
     }, [dataset, groupBy, chartType]);
