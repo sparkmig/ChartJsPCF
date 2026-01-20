@@ -1,5 +1,5 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
-import { HelloWorld, IHelloWorldProps } from "./HelloWorld";
+import { Chart, IChartProps } from "./HelloWorld";
 import * as React from "react";
 import { Chart as ChartJS, ChartData } from "chart.js";
 import DataSetInterfaces = ComponentFramework.PropertyHelper.DataSetApi;
@@ -75,9 +75,9 @@ export class ChartSample implements ComponentFramework.ReactControl<IInputs, IOu
         };
 
         const {allocatedHeight, allocatedWidth} = context.mode;
-        const props: IHelloWorldProps = { name: 'Power Apps', allocatedHeight, allocatedWidth, dataset };
+        const props: IChartProps = { name: 'Power Apps', allocatedHeight, allocatedWidth, dataset };
         return React.createElement(
-            HelloWorld, props
+            Chart, props
         );
     }
 

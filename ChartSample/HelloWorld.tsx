@@ -2,18 +2,18 @@ import * as React from 'react';
 import { Label } from '@fluentui/react-components';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { useTransformer } from './transformers';
+import { useTransformer } from './transformer/useTransformers';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-export interface IHelloWorldProps {
+export interface IChartProps {
   name?: string;
   allocatedHeight: number;
   allocatedWidth: number;
   dataset: ComponentFramework.PropertyTypes.DataSet;
 }
 
-export function HelloWorld(props: IHelloWorldProps): React.ReactElement {
-      const { allocatedHeight, allocatedWidth } = props;
+export function Chart(props: IChartProps): React.ReactElement {
+    const { allocatedHeight, allocatedWidth } = props;
     const transformed = useTransformer("doughnut", props.dataset, "Name");
 
     return (
