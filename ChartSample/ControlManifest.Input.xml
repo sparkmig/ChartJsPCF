@@ -17,29 +17,32 @@
       <domain></domain>
       -->
     </external-service-usage>
-    
-      <property
-        name="groupBy"
-        display-name-key="Group by"
-        description-key="Property_Desc_Key"
-        of-type="SingleLine.Text"
-        usage="input"
-        required="true" />
         
       <property
-        name="chartType"
-        display-name-key="Chart type"
-        description-key="Property_Desc_Key"
-        of-type="SingleLine.Text"
-        usage="input"
-        required="true" />
+  name="chartType"
+  display-name-key="Chart Type"
+  description-key="Select the type of chart to display"
+  of-type="Enum"
+  usage="input"
+  default-value="bar"
+>
+  <value name="Bar" display-name-key="Bar chart">bar</value>
+  <value name="Doughnut" display-name-key="Doughnut chart">doughnut</value>
+</property>
     <!-- dataset node represents a set of entity records on CDS; allow more than one datasets -->
     <data-set name="sampleDataSet" display-name-key="Dataset_Display_Key">
       <!-- 'property-set' node represents a unique, configurable property that each record in the dataset must provide. -->
       <!-- UNCOMMENT TO ADD PROPERTY-SET NODE
       <property-set name="samplePropertySet" display-name-key="Property_Display_Key" description-key="Property_Desc_Key" of-type="SingleLine.Text" usage="bound" required="true" />
       -->
-
+      <property-set
+  name="groupBy"
+  display-name-key="Group by column"
+  description-key="Select the column used to group the data"
+  of-type="SingleLine.Text"
+  usage="bound"
+  required="false"
+/>
     </data-set>
     <resources>
       <code path="index.ts" order="1"/>

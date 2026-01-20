@@ -1,51 +1,38 @@
 import { useMemo } from "react";
-import DataSetInterfaces = ComponentFramework.PropertyHelper.DataSetApi;
 import DataSet = ComponentFramework.PropertyTypes.DataSet;
 import { ChartData, ChartType } from "chart.js";
 import { transformers } from "./transformers";
 
-export const useTransformer = <TType extends ChartType>(chartType: TType, dataset: DataSet, groupBy: string): ChartData<TType, number[], string> | null => {
+export const useTransformer = <TType extends ChartType>(chartType: TType, dataset: DataSet): ChartData<TType, number[], string> | null => {
     return useMemo(() => {
         if(!(chartType in transformers)) {
             return null;
         }
-        const mapped = mapRecords(dataset, groupBy);
-        const grouped = groupRecords(mapped, groupBy);
+
+        const grouped = groupRecords(dataset);
         
         return transformers[chartType](grouped) as ChartData<TType, number[], string>;
-    }, [dataset, groupBy, chartType]);
+    }, [dataset, chartType]);
 }
 
-function mapRecords(dataset: DataSet, groupBy: string) {
-    return Object.keys(dataset.records).map((key: string) => {
-        const record = dataset.records[key];
-        const ent = {} as Record<string, unknown>;
-        dataset.columns.forEach((column: DataSetInterfaces.Column) => {
-            if (column.name === groupBy) {
-                const value = record.getFormattedValue(column.name);
-                ent[column.name] = value;
-            }
-        });
-        return ent;
-    });
-}
 
-function groupRecords(mapped: Record<string, unknown>[], groupBy: string) {
-    const grouped = mapped.reduce((acc, curr) => {
-        acc = acc as Record<string, number>;
-        curr = curr as Record<string, string>;
+/**
+ * 
+ * @param dataset the dataset to be grouped.
+ * @returns An object, where the groupBy is the properties/keys, and the values is the amount the key is represented in the dataset
+ */
+function groupRecords(dataset: DataSet) {
 
-        if (groupBy in curr) {
-            const groupByValue = curr[groupBy] as string;
-            if (!(groupByValue in acc)) {
-                acc[groupByValue] = 1;
-            }
-            else if (groupByValue in acc && typeof acc[groupByValue] === "number") {
-                acc[groupByValue]++;
-            }
+    return Object.keys(dataset.records).reduce((acc, curr) => { 
+        const record = dataset.records[curr];
+        const value = record.getFormattedValue("groupBy");
+
+        if (value in acc) {
+            acc[value]++;
+        } else {
+            acc[value] = 1;
         }
-        return acc;
-    }, {}) as Record<string, number>;
 
-    return grouped;
+        return acc;
+    }, {} as Record<string, number>);
 }

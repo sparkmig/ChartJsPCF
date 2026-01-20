@@ -1,5 +1,5 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
-import { Chart, IChartProps } from "./HelloWorld";
+import { Chart, IChartProps } from "./Chart";
 import * as React from "react";
 import { Chart as ChartJS, ChartData, ChartType, CategoryScale, LinearScale } from "chart.js";
 import DataSetInterfaces = ComponentFramework.PropertyHelper.DataSetApi;
@@ -37,10 +37,9 @@ export class ChartSample implements ComponentFramework.ReactControl<IInputs, IOu
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
         const dataset = context.parameters.sampleDataSet;
-        const groupBy = context.parameters.groupBy.raw ?? "Name";
-        const chartType = (context.parameters.chartType.raw ?? "doughnut") as ChartType;
+        const chartType = (context.parameters.chartType.raw) as ChartType;
         const { allocatedHeight, allocatedWidth } = context.mode;
-        const props: IChartProps = { name: 'Power Apps', allocatedHeight, allocatedWidth, dataset, chartType, groupBy };
+        const props: IChartProps = { name: 'Power Apps', allocatedHeight, allocatedWidth, dataset, chartType };
         return React.createElement(
             Chart, props
         );

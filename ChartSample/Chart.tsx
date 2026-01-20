@@ -16,13 +16,13 @@ export interface IChartProps {
   groupBy?: string;
 }
 
-export function Chart({ allocatedHeight, allocatedWidth, dataset, chartType = "doughnut", groupBy = "Name" }: IChartProps): React.ReactElement {
-  const transformed = useTransformer(chartType, dataset, groupBy);
-  if(!transformed) {
-    return <Label>Chart type {chartType} not supported.</Label>
+export function Chart({ allocatedHeight, allocatedWidth, dataset, chartType = "doughnut" }: IChartProps): React.ReactElement {
+  const transformed = useTransformer(chartType, dataset);
+  if (!transformed) {
+    return <Label>Chart type transformer for: {chartType} is not supported.</Label>
   }
-  return <div style={{height: allocatedHeight, width: allocatedWidth}}>
-      <ChartSwitch chartType={chartType} data={transformed} />
+  return <div style={{ height: allocatedHeight, width: allocatedWidth }}>
+    <ChartSwitch chartType={chartType} data={transformed} />
   </div>
 }
 
@@ -36,7 +36,6 @@ function ChartSwitch<TType extends ChartType>({ chartType, data }: IChartSwitchP
     case "doughnut":
       return <Doughnut data={data as ChartData<"doughnut", number[], string>} />
     case "bar":
-      console.log("Rendering bar chart");
       return <Bar data={data as ChartData<"bar", number[], string>} />
     default:
       return <Label>Chart type {chartType} not supported.</Label>
