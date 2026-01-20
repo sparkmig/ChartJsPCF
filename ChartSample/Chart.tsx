@@ -3,6 +3,7 @@ import { Label } from '@fluentui/react-components';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData, ChartType, registerables } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { useTransformer } from './transformer/useTransformers';
+import { TransformerError } from './transformer/errors';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(...registerables);
@@ -13,17 +14,21 @@ export interface IChartProps {
   allocatedWidth: number;
   dataset: ComponentFramework.PropertyTypes.DataSet;
   chartType?: ChartType;
-  groupBy?: string;
 }
 
 export function Chart({ allocatedHeight, allocatedWidth, dataset, chartType = "doughnut" }: IChartProps): React.ReactElement {
-  const transformed = useTransformer(chartType, dataset);
-  if (!transformed) {
-    return <Label>Chart type transformer for: {chartType} is not supported.</Label>
+  const [data, error] = useTransformer(chartType, dataset);
+  
+  switch (error) {
+    case TransformerError.NoTransformer:
+      return <Label> No transformer found for chart type {chartType} </Label>;
+    case TransformerError.NoData:
+      return <Label> No data available to display the chart. </Label>;
+    case TransformerError.None:
+      return <div style={{ height: allocatedHeight, width: allocatedWidth }}>
+        {data && <ChartSwitch chartType={chartType} data={data} />}
+      </div>;
   }
-  return <div style={{ height: allocatedHeight, width: allocatedWidth }}>
-    <ChartSwitch chartType={chartType} data={transformed} />
-  </div>
 }
 
 interface IChartSwitchProps<TType extends ChartType> {

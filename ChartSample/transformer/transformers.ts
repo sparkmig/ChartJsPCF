@@ -23,7 +23,7 @@ const bar = (grouped: Record<string, number>) => {
             
         }],
     };  
-    console.log("Bar chart data:", data);
+    
     return data;
 }
 
